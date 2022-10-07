@@ -37,39 +37,53 @@ function playRound(computerSelection, playerSelection) {
 
 let playerScore = 0
 let computerScore = 0
+const btn = document.querySelectorAll('button');
+const scoreDiv = document.querySelector('.score')
+let newScore = document.createElement('p')
+let update = document.createElement('p')
 
 function game() {
-    let computerSelection = ""
-    let playerSelection = ""
-    let outcome = ""
+    newScore.textContent = "Score: 0 - 0"
+    scoreDiv.appendChild(newScore)
+    btn.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            let playerSelection = btn.className
+            let computerSelection = getComputerChoice();
+            console.log(playerSelection + "VS" + computerSelection)
 
-    for (let i = 0; i < 5; i++) {
-        computerSelection = getComputerChoice();
-        playerSelection = prompt("Choose your weapon").toLowerCase();
-        console.log(playerSelection + "VS" + computerSelection)
-        outcome = playRound(computerSelection, playerSelection)
+            if (playRound(computerSelection, playerSelection) === "You win!") {
+                playerScore += 1
+                newScore.textContent = "Score: " + playerScore + " - " + computerScore
+                update.textContent = "You won that round!"
+                scoreDiv.appendChild(newScore)
+                scoreDiv.appendChild(update)
+            }
+            else if (playRound(computerSelection, playerSelection) === "You lose!") {
+                computerScore += 1
+                newScore.textContent = "Score: " + playerScore + " - " + computerScore
+                update.textContent = "You lost that round!"
+                scoreDiv.appendChild(newScore)
+                scoreDiv.appendChild(update)
+            }
+            else {
+                update.textContent = "You tied that round!"
+                scoreDiv.appendChild(update)
+            }
 
-        if (outcome === "You win!") {
-            playerScore += 1
-            console.log(outcome + " " + "Player Score" + " " + playerScore + " " + "Computer Score" + " " + computerScore)
-        }
-        else if (outcome === "You lose!") {
-            computerScore += 1
-            console.log(outcome + " " + "Player Score" + " " + playerScore + " " + "Computer Score" + " " + computerScore)
-        }
-        else {
-            console.log(outcome + " " + "Player Score" + " " + playerScore + " " + "Computer Score" + " " + computerScore)
-        }
-    }
-    if (playerScore > computerScore) {
-        return "You won the series!"
-    }
-    else if (computerScore > playerScore) {
-        return "You lost the series!"
-    }
-    else {
-        return "You tied the series!"
-    }
+            if (playerScore === 5) {
+                console.log("win")
+                update.textContent = "You won the series!"
+                return scoreDiv.appendChild(update)
+                
+            }
+            else if (computerScore === 5) {
+                console.log("lose")
+                update.textContent = "You lost the series!"
+                return scoreDiv.appendChild(update)
+                
+            }
+        });
+    });
 }
 
-console.log(game())
+game()
